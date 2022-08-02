@@ -8,16 +8,20 @@ import (
 	"github.com/spf13/viper"
 )
 
+const lastActivity string = "lastactivity"
+
 var (
 	roomsMax           int
 	roomsFields        []string
+	sortBy             string
 	defaultRoomsFields = []string{"Title", "RoomType", "IsLocked", "Created"}
 )
 
 func listRooms(max int) error {
 	wc := NewWebexTeamsClient()
 	queryParams := &webexteams.ListRoomsQueryParams{
-		Max: max,
+		Max:    max,
+		SortBy: sortBy,
 	}
 	rooms, resp, err := wc.Rooms.ListRooms(queryParams)
 
@@ -77,6 +81,7 @@ func init() {
 		20,
 		"Number max of rooms to list",
 	)
+	roomsCmd.Flags().StringVarP(&sortBy, "sort-by", "s", lastActivity, "Choose how to sort rooms (id, lastactivity, created)")
 	roomsCmd.Flags().StringSliceVar(&roomsFields, "rooms-fields", defaultRoomsFields, "Rooms fields to display")
 	viper.BindPFlag("roomsFields", roomsCmd.Flags().Lookup("rooms-fields"))
 }
