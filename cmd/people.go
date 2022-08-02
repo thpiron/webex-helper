@@ -114,7 +114,7 @@ func init() {
 		&peopleMax,
 		"max",
 		"m",
-		0,
+		20,
 		"Number max of people to list",
 	)
 	peopleCmd.Flags().StringSliceVar(&peopleFields, "people-fields", defaultPeopleFields, "People fields to display")

@@ -74,7 +74,7 @@ func init() {
 		&roomsMax,
 		"max",
 		"m",
-		0,
+		20,
 		"Number max of rooms to list",
 	)
 	roomsCmd.Flags().StringSliceVar(&roomsFields, "rooms-fields", defaultRoomsFields, "Rooms fields to display")

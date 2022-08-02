@@ -70,7 +70,7 @@ func init() {
 		&teamsMax,
 		"max",
 		"m",
-		0,
+		20,
 		"Number max of teams to list",
 	)
 	teamsCmd.Flags().StringSliceVar(&teamsFields, "teams-fields", defaultTeamsFields, "Teams fields to display")
