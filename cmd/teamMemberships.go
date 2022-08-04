@@ -80,7 +80,7 @@ func init() {
 	)
 	teamMembershipsCmd.MarkFlagRequired("team-id")
 	teamMembershipsCmd.Flags().IntVarP(
-		&teamsMax,
+		&teamMembershipsMax,
 		"max",
 		"m",
 		20,
