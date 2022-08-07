@@ -6,6 +6,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/utils"
 )
 
 var (
@@ -18,7 +19,7 @@ var (
 )
 
 func ListPeople(email, displayName, orgID string, max int) error {
-	wc := NewWebexTeamsClient()
+	wc := utils.NewWebexTeamsClient()
 	queryParams := &webexteams.ListPeopleQueryParams{
 		Email:       email,
 		DisplayName: displayName,
@@ -29,7 +30,7 @@ func ListPeople(email, displayName, orgID string, max int) error {
 	if err != nil {
 		return err
 	}
-	if err := checkWebexError(*resp); err != nil {
+	if err := utils.CheckWebexError(*resp); err != nil {
 		return err
 	}
 
@@ -44,16 +45,16 @@ func ListPeople(email, displayName, orgID string, max int) error {
 	}
 
 	fields := viper.GetStringSlice("peopleFields")
-	printStructSliceAsTable(s, fields)
+	utils.PrintStructSliceAsTable(s, fields)
 	return nil
 }
 
-// peopleCmd represents the people command
-var peopleCmd = &cobra.Command{
+// peopleListCmd represents the people command
+var peopleListCmd = &cobra.Command{
 	Use:   "people",
-	Short: "Interact with people endpoints",
+	Short: "List peoples",
 	Long: `
-People command let you get details and list people in webex API.
+People command let you search/list people in webex API.
 You can set the fields to display in table mode in your config file ($HOME/.config/webex-helper/config.yaml):
 peopleFields:
 	- ID
@@ -77,7 +78,7 @@ peopleFields:
 	- LoginEnabled
 	- PersonType
 Example:
-	$ webex-helper people list -d John Doe (for non admin user -d display_name is necessary)
+	$ webex-helper list people -d John Doe (for non admin user -d display_name is necessary)
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := ListPeople(peopleEmail, peopleDisplayName, peopleOrgID, peopleMax)
@@ -88,35 +89,35 @@ Example:
 }
 
 func init() {
-	rootCmd.AddCommand(peopleCmd)
-	peopleCmd.Flags().StringVarP(
+	listCmd.AddCommand(peopleListCmd)
+	peopleListCmd.Flags().StringVarP(
 		&peopleEmail,
 		"email",
 		"e",
 		"",
 		"email address of the person to search (either this or display-name are required for non admin users)",
 	)
-	peopleCmd.Flags().StringVarP(
+	peopleListCmd.Flags().StringVarP(
 		&peopleDisplayName,
 		"display-name",
 		"d",
 		"",
 		"display name of the person to search (either this or email are required for non admin users)",
 	)
-	peopleCmd.Flags().StringVarP(
+	peopleListCmd.Flags().StringVarP(
 		&peopleOrgID,
 		"orgID",
 		"o",
 		"",
 		"orgID of the persons to list",
 	)
-	peopleCmd.Flags().IntVarP(
+	peopleListCmd.Flags().IntVarP(
 		&peopleMax,
 		"max",
 		"m",
 		20,
 		"Number max of people to list",
 	)
-	peopleCmd.Flags().StringSliceVar(&peopleFields, "people-fields", defaultPeopleFields, "People fields to display")
-	viper.BindPFlag("peopleFields", peopleCmd.Flags().Lookup("people-fields"))
+	peopleListCmd.Flags().StringSliceVar(&peopleFields, "people-fields", defaultPeopleFields, "People fields to display")
+	viper.BindPFlag("peopleFields", peopleListCmd.Flags().Lookup("people-fields"))
 }

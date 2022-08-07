@@ -6,6 +6,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/utils"
 )
 
 const lastActivity string = "lastactivity"
@@ -18,7 +19,7 @@ var (
 )
 
 func listRooms(max int) error {
-	wc := NewWebexTeamsClient()
+	wc := utils.NewWebexTeamsClient()
 	queryParams := &webexteams.ListRoomsQueryParams{
 		Max:    max,
 		SortBy: sortBy,
@@ -29,7 +30,7 @@ func listRooms(max int) error {
 		return err
 	}
 
-	if err := checkWebexError(*resp); err != nil {
+	if err := utils.CheckWebexError(*resp); err != nil {
 		return err
 	}
 
@@ -43,12 +44,12 @@ func listRooms(max int) error {
 	}
 
 	fields := viper.GetStringSlice("roomsFields")
-	printStructSliceAsTable(s, fields)
+	utils.PrintStructSliceAsTable(s, fields)
 	return nil
 }
 
-// roomsCmd represents the rooms command
-var roomsCmd = &cobra.Command{
+// roomsListCmd represents the rooms command
+var roomsListCmd = &cobra.Command{
 	Use:   "rooms",
 	Short: "Retrieve information on rooms",
 	Long: `
@@ -73,15 +74,15 @@ roomsFields:
 }
 
 func init() {
-	rootCmd.AddCommand(roomsCmd)
-	roomsCmd.Flags().IntVarP(
+	listCmd.AddCommand(roomsListCmd)
+	roomsListCmd.Flags().IntVarP(
 		&roomsMax,
 		"max",
 		"m",
 		20,
 		"Number max of rooms to list",
 	)
-	roomsCmd.Flags().StringVarP(&sortBy, "sort-by", "s", lastActivity, "Choose how to sort rooms (id, lastactivity, created)")
-	roomsCmd.Flags().StringSliceVar(&roomsFields, "rooms-fields", defaultRoomsFields, "Rooms fields to display")
-	viper.BindPFlag("roomsFields", roomsCmd.Flags().Lookup("rooms-fields"))
+	roomsListCmd.Flags().StringVarP(&sortBy, "sort-by", "s", lastActivity, "Choose how to sort rooms (id, lastactivity, created)")
+	roomsListCmd.Flags().StringSliceVar(&roomsFields, "rooms-fields", defaultRoomsFields, "Rooms fields to display")
+	viper.BindPFlag("roomsFields", roomsListCmd.Flags().Lookup("rooms-fields"))
 }

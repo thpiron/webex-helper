@@ -1,4 +1,4 @@
-package cmd
+package utils
 
 import (
 	"encoding/json"
@@ -34,7 +34,29 @@ func StringSliceContains(s []string, v string, insensitive bool) bool {
 	return false
 }
 
-func printStructSliceAsTable(s []interface{}, fields []string) {
+func PrintStructAsTable(a interface{}, fields []string) {
+	w := tabwriter.NewWriter(os.Stdout, 10, 1, 5, ' ', 0)
+
+	headers := make([]string, 0)
+	values := []string{}
+	v := reflect.ValueOf(a)
+	typ := v.Type()
+
+	for i, n := 0, typ.NumField(); i < n; i++ {
+		if len(fields) == 0 || StringSliceContains(fields, typ.Field(i).Name, true) {
+			headers = append(headers, typ.Field(i).Name)
+		}
+	}
+	for _, hearder := range headers {
+		values = append(values, fmt.Sprint(v.FieldByName(hearder).Interface()))
+	}
+	fmt.Fprint(w, strings.Join(headers, "\t")+"\n")
+	fmt.Fprint(w, strings.Join(values, "\t")+"\n")
+
+	w.Flush()
+}
+
+func PrintStructSliceAsTable(s []interface{}, fields []string) {
 	if len(s) <= 0 {
 		fmt.Println("Nothing to display")
 		return
@@ -64,7 +86,7 @@ func printStructSliceAsTable(s []interface{}, fields []string) {
 	w.Flush()
 }
 
-func checkWebexError(resp resty.Response) error {
+func CheckWebexError(resp resty.Response) error {
 	if resp.IsSuccess() {
 		return nil
 	}

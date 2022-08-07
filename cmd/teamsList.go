@@ -6,6 +6,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/utils"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 )
 
 func listTeams(max int) error {
-	wc := NewWebexTeamsClient()
+	wc := utils.NewWebexTeamsClient()
 	queryParams := &webexteams.ListTeamsQueryParams{
 		Max: max,
 	}
@@ -25,7 +26,7 @@ func listTeams(max int) error {
 		return err
 	}
 
-	if err := checkWebexError(*resp); err != nil {
+	if err := utils.CheckWebexError(*resp); err != nil {
 		return err
 	}
 
@@ -39,7 +40,7 @@ func listTeams(max int) error {
 	}
 
 	fields := viper.GetStringSlice("teamsFields")
-	printStructSliceAsTable(s, fields)
+	utils.PrintStructSliceAsTable(s, fields)
 	return nil
 }
 
@@ -65,7 +66,7 @@ teamsFields:
 }
 
 func init() {
-	rootCmd.AddCommand(teamsCmd)
+	listCmd.AddCommand(teamsCmd)
 	teamsCmd.Flags().IntVarP(
 		&teamsMax,
 		"max",
