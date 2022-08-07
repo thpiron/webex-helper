@@ -65,6 +65,9 @@ roomsFields:
 	- LastActivity
 	- Created
 `,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		viper.BindPFlag("roomsFields", cmd.Flags().Lookup("rooms-fields"))
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := listRooms(roomsMax)
 		if err != nil {
@@ -84,5 +87,4 @@ func init() {
 	)
 	roomsListCmd.Flags().StringVarP(&sortBy, "sort-by", "s", lastActivity, "Choose how to sort rooms (id, lastactivity, created)")
 	roomsListCmd.Flags().StringSliceVar(&roomsFields, "rooms-fields", defaultRoomsFields, "Rooms fields to display")
-	viper.BindPFlag("roomsFields", roomsListCmd.Flags().Lookup("rooms-fields"))
 }

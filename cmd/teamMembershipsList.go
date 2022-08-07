@@ -63,6 +63,9 @@ teamsFields:
 	- IsModerator
 	- Created
 `,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		viper.BindPFlag("teamMembershipsFields", cmd.Flags().Lookup("teamMemberships-fields"))
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := listTeamMemberships(teamMembershipsMax)
 		if err != nil {
@@ -88,5 +91,4 @@ func init() {
 		"Number max of teams to list",
 	)
 	teamMembershipsCmd.Flags().StringSliceVar(&teamMembershipsFields, "teamMemberships-fields", defaultTeamMembershipsFields, "Teams memberships fields to display")
-	viper.BindPFlag("teamMembershipsFields", teamMembershipsCmd.Flags().Lookup("teamMemberships-fields"))
 }

@@ -57,6 +57,9 @@ teamsFields:
 - CreatorID
 - Created
 `,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		viper.BindPFlag("teamsFields", cmd.Flags().Lookup("teams-fields"))
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := listTeams(teamsMax)
 		if err != nil {
@@ -75,5 +78,4 @@ func init() {
 		"Number max of teams to list",
 	)
 	teamsCmd.Flags().StringSliceVar(&teamsFields, "teams-fields", defaultTeamsFields, "Teams fields to display")
-	viper.BindPFlag("teamsFields", teamsCmd.Flags().Lookup("teams-fields"))
 }

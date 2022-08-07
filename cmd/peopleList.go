@@ -80,6 +80,9 @@ peopleFields:
 Example:
 	$ webex-helper list people -d John Doe (for non admin user -d display_name is necessary)
 `,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		viper.BindPFlag("peopleFields", cmd.Flags().Lookup("people-fields"))
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := ListPeople(peopleEmail, peopleDisplayName, peopleOrgID, peopleMax)
 		if err != nil {
@@ -119,5 +122,4 @@ func init() {
 		"Number max of people to list",
 	)
 	peopleListCmd.Flags().StringSliceVar(&peopleFields, "people-fields", defaultPeopleFields, "People fields to display")
-	viper.BindPFlag("peopleFields", peopleListCmd.Flags().Lookup("people-fields"))
 }
