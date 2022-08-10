@@ -11,7 +11,7 @@ import (
 var (
 	cfgFile    string
 	token      string
-	jsonOutput bool
+	JsonOutput bool
 	rootCmd    = &cobra.Command{
 		Use:   "webex-helper",
 		Short: "Little CLI around the webex API to easily read API data",
@@ -38,7 +38,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/webex-helper.yaml)")
 	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "Webex token, you can save it in a config file using saveToken")
-	rootCmd.PersistentFlags().BoolVarP(&jsonOutput, "json", "", false, "Return a json formated output")
+	rootCmd.PersistentFlags().BoolVarP(&JsonOutput, "json", "", false, "Return a json formated output")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 }
 

@@ -1,14 +1,11 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
-package cmd
+package rooms
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -22,7 +19,7 @@ func GetRoom(roomID string) error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -63,7 +60,7 @@ roomsFields:
 }
 
 func init() {
-	getCmd.AddCommand(roomsGetCmd)
+	cmd.GetCmd.AddCommand(roomsGetCmd)
 
 	roomsGetCmd.Flags().StringSliceVar(&roomsFields, "rooms-fields", defaultRoomsFields, "Rooms fields to display")
 }

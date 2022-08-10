@@ -4,15 +4,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// updateCmd represents the update command
-var updateCmd = &cobra.Command{
+// UpdateCmd represents the update command
+var UpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update a resouce",
 	Long:  `Update a resource`,
 }
 
 func init() {
-	rootCmd.AddCommand(updateCmd)
+	rootCmd.AddCommand(UpdateCmd)
 
 	// Here you will define your flags and configuration settings.
 

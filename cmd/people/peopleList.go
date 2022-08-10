@@ -1,4 +1,4 @@
-package cmd
+package people
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -34,7 +35,7 @@ func ListPeople(email, displayName, orgID string, max int) error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -92,7 +93,7 @@ Example:
 }
 
 func init() {
-	listCmd.AddCommand(peopleListCmd)
+	cmd.ListCmd.AddCommand(peopleListCmd)
 	peopleListCmd.Flags().StringVarP(
 		&peopleEmail,
 		"email",

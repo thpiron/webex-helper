@@ -1,4 +1,4 @@
-package cmd
+package people
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -40,7 +41,7 @@ func UpdatePerson(personID string) error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -69,7 +70,7 @@ var peopleUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	updateCmd.AddCommand(peopleUpdateCmd)
+	cmd.UpdateCmd.AddCommand(peopleUpdateCmd)
 	peopleUpdateCmd.Flags().StringSliceVar(&peopleFields, "people-fields", defaultPeopleFields, "People fields to display")
 
 	peopleUpdateCmd.Flags().StringSliceVar(&updatedEmails, "emails", nil, "List of user's emails")

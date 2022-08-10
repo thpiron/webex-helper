@@ -8,15 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
+// ListCmd represents the list command
+var ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "list a resource",
 	Long:  `List a resource`,
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(ListCmd)
 
 	// Here you will define your flags and configuration settings.
 

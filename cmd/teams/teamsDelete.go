@@ -1,13 +1,10 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
-package cmd
+package teams
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -42,5 +39,5 @@ var teamsDeleteCmd = &cobra.Command{
 }
 
 func init() {
-	deleteCmd.AddCommand(teamsDeleteCmd)
+	cmd.DeleteCmd.AddCommand(teamsDeleteCmd)
 }

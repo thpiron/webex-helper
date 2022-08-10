@@ -1,14 +1,11 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
-package cmd
+package teams
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -25,7 +22,7 @@ func getTeams(teamID string) error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -61,7 +58,7 @@ teamsFields:
 }
 
 func init() {
-	getCmd.AddCommand(teamsGetCmd)
+	cmd.GetCmd.AddCommand(teamsGetCmd)
 
 	teamsGetCmd.Flags().StringSliceVar(&teamsFields, "teams-fields", defaultTeamsFields, "Teams fields to display")
 }

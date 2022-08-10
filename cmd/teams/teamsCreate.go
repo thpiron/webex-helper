@@ -1,8 +1,4 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
-package cmd
+package teams
 
 import (
 	"fmt"
@@ -10,18 +6,18 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
 var (
-	updatedTeamName string
+	teamName string
 )
 
-func updateTeam(teamID string) error {
+func createTeam() error {
 	wc := utils.NewWebexTeamsClient()
-
-	team, resp, err := wc.Teams.UpdateTeam(teamID, &webexteams.TeamUpdateRequest{
-		Name: updatedTeamName,
+	team, resp, err := wc.Teams.CreateTeam(&webexteams.TeamCreateRequest{
+		Name: teamName,
 	})
 	if err != nil {
 		return err
@@ -31,7 +27,7 @@ func updateTeam(teamID string) error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -41,18 +37,17 @@ func updateTeam(teamID string) error {
 	return nil
 }
 
-// teamsUpdateCmd represents the teamsUpdate command
-var teamsUpdateCmd = &cobra.Command{
+// teamsCreateCmd represents the teamsCreate command
+var teamsCreateCmd = &cobra.Command{
 	Use:     "teams",
-	Short:   "Update a team",
-	Long:    `Update a team.`,
+	Short:   "Create a team",
+	Long:    `Create a team`,
 	Aliases: []string{"team"},
 	PreRun: func(cmd *cobra.Command, args []string) {
 		viper.BindPFlag("teamsFields", cmd.Flags().Lookup("teams-fields"))
 	},
-	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		err := updateTeam(args[0])
+		err := createTeam()
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -60,10 +55,10 @@ var teamsUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	updateCmd.AddCommand(teamsUpdateCmd)
+	cmd.CreateCmd.AddCommand(teamsCreateCmd)
 
-	teamsUpdateCmd.Flags().StringVar(&updatedTeamName, "name", "", "Name of the team")
-	teamsUpdateCmd.Flags().StringSliceVar(&teamsFields, "teams-fields", defaultTeamsFields, "Teams fields to display")
+	teamsCreateCmd.Flags().StringVar(&teamName, "name", "", "Name of the team")
+	teamsCreateCmd.Flags().StringSliceVar(&teamsFields, "teams-fields", defaultTeamsFields, "Teams fields to display")
 
-	teamsUpdateCmd.MarkFlagRequired("name")
+	teamsCreateCmd.MarkFlagRequired("name")
 }

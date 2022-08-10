@@ -1,8 +1,4 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
-package cmd
+package people
 
 import (
 	"fmt"
@@ -11,6 +7,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -33,7 +30,7 @@ func GetPeople(peopleID string) error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -86,7 +83,7 @@ peopleFields:
 }
 
 func init() {
-	getCmd.AddCommand(peopleGetCmd)
+	cmd.GetCmd.AddCommand(peopleGetCmd)
 
 	peopleGetCmd.Flags().StringSliceVar(&peopleFields, "people-fields", defaultPeopleFields, "People fields to display")
 }

@@ -1,4 +1,4 @@
-package cmd
+package rooms
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
 )
 
@@ -35,7 +36,7 @@ func CreateRoom() error {
 		return err
 	}
 
-	if jsonOutput {
+	if cmd.JsonOutput {
 		fmt.Println(string(resp.Body()))
 		return nil
 	}
@@ -63,7 +64,7 @@ var roomCreateCmd = &cobra.Command{
 }
 
 func init() {
-	createCmd.AddCommand(roomCreateCmd)
+	cmd.CreateCmd.AddCommand(roomCreateCmd)
 	roomCreateCmd.Flags().StringVar(&roomTitle, "title", "", "Title of the room.")
 	roomCreateCmd.Flags().StringVar(&teamID, "team-id", "", "The ID for the team with which this room is associated.")
 	// createCmd.Flags().StringVar(&classificationID, "classification-id", "", "The classificationId for the room.")
