@@ -100,5 +100,5 @@ func CheckWebexError(resp resty.Response) error {
 	if err != nil {
 		return fmt.Errorf("unable to unmarsharl the webex error: %v", err)
 	}
-	return fmt.Errorf("webex error: %v", we.Message)
+	return fmt.Errorf("webex error %v: %v", resp.StatusCode(), we.Message)
 }
