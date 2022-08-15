@@ -2,7 +2,6 @@ package messages
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/go-resty/resty/v2"
 	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
@@ -15,9 +14,11 @@ import (
 var (
 	direct          bool
 	mentionedPeople string
-	before          time.Time
-	beforeRaw       string
-	beforeMessage   string
+	// before related is commented for now, waiting for the sdk to be fixed
+	// PR: https://github.com/jbogarin/go-cisco-webex-teams/pull/27
+	// before          time.Time
+	// beforeRaw     string
+	beforeMessage string
 )
 
 func listMessages() error {
@@ -38,7 +39,7 @@ func listMessages() error {
 		messages, resp, err = wc.Messages.ListMessages(&webexteams.ListMessagesQueryParams{
 			RoomID: roomID,
 			// ParentID:        parentID, Not yet implemented in SDK
-			Before:          before,
+			// Before:          before,
 			BeforeMessage:   beforeMessage,
 			MentionedPeople: mentionedPeople,
 		})
@@ -71,19 +72,19 @@ var messagesListCmd = &cobra.Command{
 	Use:   "messages",
 	Short: "List messages",
 	Long:  `List messages.`,
-	PreRun: func(cmd *cobra.Command, args []string) {
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		viper.BindPFlag("messagesFields", cmd.Flags().Lookup("messages-fields"))
-		if beforeRaw != "" {
-			var err error
-			before, err = time.Parse("2006-01-02 15:04:05", beforeRaw)
-			if err != nil {
-				fmt.Println("Error when parsing until date, please use the 'yyyy-mm-dd HH:MM:SS' format")
-				return
-			}
-		}
+		// if beforeRaw != "" {
+		// 	var err error
+		// 	before, err = time.Parse("2006-01-02 15:04:05", beforeRaw)
+		// 	if err != nil {
+		// 		return errors.New("error when parsing 'before' date, please use the 'yyyy-mm-dd HH:MM:SS' format")
+		// 	}
+		// }
 		if !direct {
 			cmd.MarkFlagRequired("room-id")
 		}
+		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		err := listMessages()
@@ -102,7 +103,7 @@ func init() {
 	messagesListCmd.Flags().StringVar(&personEmail, "person-email", "", "Person email of the creator of the messages to list.")
 	messagesListCmd.Flags().StringVar(&beforeMessage, "before-message", "", "Message ID of the last message to list (Only for not direct messages).")
 	messagesListCmd.Flags().StringVar(&mentionedPeople, "mentioned-people", "", "List messages where this people is mentionned") // For now sdk don't accept a list of mentionned people
-	messagesListCmd.Flags().StringVar(&beforeRaw, "before", "", "List message before the given date (format: yyyy-mm-dd HH:MM:SS). This must be UTC time")
+	// messagesListCmd.Flags().StringVar(&beforeRaw, "before", "", "List message before the given date (format: yyyy-mm-dd HH:MM:SS). This must be UTC time")
 
 	messagesListCmd.Flags().StringSliceVar(&messagesFields, "messages-fields", defaultMessagesFields, "Memberships fields to display")
 }
