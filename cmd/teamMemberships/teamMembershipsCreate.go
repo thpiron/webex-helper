@@ -38,7 +38,7 @@ func createTeamMembership() error {
 		return nil
 	}
 
-	fields := viper.GetStringSlice("teamsFields")
+	fields := viper.GetStringSlice("teamMembershipsFields")
 	utils.PrintStructAsTable(*teamMembership, fields)
 	return nil
 }
@@ -50,7 +50,7 @@ var teamMembershipsCreateCmd = &cobra.Command{
 	Long:    "Create a teamMembership",
 	Aliases: []string{"teamMembership"},
 	PreRun: func(cmd *cobra.Command, args []string) {
-		viper.BindPFlag("teamsFields", cmd.Flags().Lookup("teamMemberships-fields"))
+		viper.BindPFlag("teamMembershipsFields", cmd.Flags().Lookup("teamMemberships-fields"))
 		if personEmail == "" {
 			cmd.MarkFlagRequired("person-id")
 		}
