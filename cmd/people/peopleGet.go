@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/go-resty/resty/v2"
-	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
+	webexteams "github.com/thpiron/webex-teams/sdk"
 )
 
 func GetPeople(peopleID string) error {

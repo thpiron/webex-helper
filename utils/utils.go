@@ -10,8 +10,8 @@ import (
 	"text/tabwriter"
 
 	"github.com/go-resty/resty/v2"
-	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/viper"
+	webexteams "github.com/thpiron/webex-teams/sdk"
 )
 
 type WebexError struct {
@@ -22,6 +22,7 @@ func NewWebexTeamsClient() *webexteams.Client {
 	wc := webexteams.NewClient()
 	token := viper.GetString("token")
 	wc.SetAuthToken(token)
+	wc.AddRetryOnTooManyRequestsStatus()
 	return wc
 }
 
@@ -56,6 +57,8 @@ func PrintStructAsTable(a interface{}, fields []string) {
 	w.Flush()
 }
 
+// display a slice of struct in a table, with the fields passed as argument
+// if the fields slice is empty, displays all fields
 func PrintStructSliceAsTable(s []interface{}, fields []string) {
 	if len(s) <= 0 {
 		fmt.Println("Nothing to display")

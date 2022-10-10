@@ -3,11 +3,11 @@ package people
 import (
 	"fmt"
 
-	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
+	webexteams "github.com/thpiron/webex-teams/sdk"
 )
 
 var (
@@ -21,12 +21,14 @@ var (
 
 func ListPeople(email, displayName, orgID string, max int) error {
 	wc := utils.NewWebexTeamsClient()
+
 	queryParams := &webexteams.ListPeopleQueryParams{
 		Email:       email,
 		DisplayName: displayName,
 		OrgID:       orgID,
 		Max:         max,
 	}
+
 	peoples, resp, err := wc.People.ListPeople(queryParams)
 	if err != nil {
 		return err

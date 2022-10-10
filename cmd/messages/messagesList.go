@@ -4,14 +4,15 @@ import (
 	"fmt"
 
 	"github.com/go-resty/resty/v2"
-	webexteams "github.com/jbogarin/go-cisco-webex-teams/sdk"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/thpiron/webex-helper/cmd"
 	"github.com/thpiron/webex-helper/utils"
+	webexteams "github.com/thpiron/webex-teams/sdk"
 )
 
 var (
+	max             int
 	direct          bool
 	mentionedPeople string
 	// before related is commented for now, waiting for the sdk to be fixed
@@ -25,15 +26,23 @@ func listMessages() error {
 	wc := utils.NewWebexTeamsClient()
 
 	var (
-		messages *webexteams.Messages
-		resp     *resty.Response
-		err      error
+		messages  *webexteams.Messages
+		resp      *resty.Response
+		requestBy int
+		err       error
 	)
+
+	if max > 1000 {
+		requestBy = 1000
+	}
+
 	if direct {
 		messages, resp, err = wc.Messages.GetDirectMessages(&webexteams.DirectMessagesQueryParams{
 			ParentID:    parentID,
 			PersonID:    personID,
 			PersonEmail: personEmail,
+			Max:         max,
+			RequestBy:   requestBy,
 		})
 	} else {
 		messages, resp, err = wc.Messages.ListMessages(&webexteams.ListMessagesQueryParams{
@@ -42,6 +51,8 @@ func listMessages() error {
 			// Before:          before,
 			BeforeMessage:   beforeMessage,
 			MentionedPeople: mentionedPeople,
+			Max:             max,
+			RequestBy:       requestBy,
 		})
 	}
 
@@ -96,6 +107,7 @@ var messagesListCmd = &cobra.Command{
 
 func init() {
 	cmd.ListCmd.AddCommand(messagesListCmd)
+	messagesListCmd.Flags().IntVar(&max, "max", 20, "Max number of messages to list")
 	messagesListCmd.Flags().BoolVar(&direct, "direct", false, "List only direct messages. Allows you to not set room-id")
 	messagesListCmd.Flags().StringVar(&roomID, "room-id", "", "Room's ID of the messages to list. Required when direct flags not set.")
 	messagesListCmd.Flags().StringVar(&parentID, "parent-id", "", "ID of the parent message of the messages to list (thread)")
